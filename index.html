@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#4f9cf9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="おこづかい帳">
+  <meta name="description" content="小学生向けのおこづかい帳アプリ">
+  <title>おこづかい帳</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="header__title">💰 おこづかい帳</h1>
+      <button type="button" class="btn-settings" id="open-settings" title="設定を開く">⚙️</button>
+      <p class="header__date" id="today-date" aria-label="きょうの日付">5月18日</p>
+      
+    </header>
+
+    <main class="main">
+      <section class="balance-card" aria-label="いまの残高">
+        <p class="balance-card__label">いまの残高</p>
+        <p class="balance-card__amount" id="balance">0</p>
+        <p class="balance-card__unit">円</p>
+      </section>
+
+      <div class="tabs tabs--ears">
+        <div class="tabs__content">
+          <div class="tabs__list" role="tablist" aria-label="画面の切り替え">
+            <button type="button" class="tabs__btn tabs__btn--active" role="tab" id="tab-record" aria-selected="true" aria-controls="panel-record">きろくをつける</button>
+            <button type="button" class="tabs__btn" role="tab" id="tab-history" aria-selected="false" aria-controls="panel-history" tabindex="-1">これまでのきろく</button>
+          </div>
+
+          <div class="tabs__body">
+            <div class="tab-panel" role="tabpanel" id="panel-record" aria-labelledby="tab-record">
+          <section class="form-card" aria-label="きろくをつける">
+            <div class="type-toggle" role="group" aria-label="種類">
+              <button type="button" class="type-toggle__btn type-toggle__btn--active" data-type="income" id="btn-income">➕ もらった</button>
+              <button type="button" class="type-toggle__btn" data-type="expense" id="btn-expense">➖ つかった</button>
+            </div>
+            <label class="field">
+              <span class="field__label">なにに？</span>
+              <input class="field__input" type="text" id="memo" placeholder="例：おかし、おてつだい" maxlength="30" autocomplete="off">
+            </label>
+            <label class="field">
+              <span class="field__label">いくら？（円）</span>
+              <input class="field__input field__input--amount" type="number" id="amount" inputmode="numeric" min="1" max="999999" placeholder="0">
+            </label>
+            <div class="quick-amounts" id="quick-amounts" aria-label="よく使う金額"></div>
+            <button type="button" class="btn btn--primary" id="btn-add">きろくする ✏️</button>
+          </section>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden>
+          <section class="history-card" aria-label="これまでのきろく">
+            <div class="history-card__head" style="flex-direction: column; align-items: stretch; gap: 12px;">
+              <!-- 1〜12月のボタンが2段で並ぶエリア -->
+              <div class="month-filter-container" id="monthButtonContainer">
+                <!-- ここにJavaScriptで1〜12月のボタンが自動で作られます -->
+              </div>
+              
+              <!-- その月の合計金額を表示するエリア（おもちゃの履歴の上になります） -->
+              <div class="month-summary-box">
+                <div class="summary-item summary-in">
+                  <span class="summary-label">もらった</span>
+                  <span class="summary-amount"><span id="monthTotalIn">0</span>円</span>
+                </div>
+                <div class="summary-item summary-out">
+                  <span class="summary-label">つかった</span>
+                  <span class="summary-amount"><span id="monthTotalOut">0</span>円</span>
+                </div>
+              </div>
+            </div>
+            <ul class="history-list" id="history-list">
+              <li class="history-list__empty" id="history-empty">まだきろくがありません</li>
+            </ul>
+          </section>
+        </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>データはこのスマホの中に保存されます</p>
+    </footer>
+  </div>
+  <div class="settings-modal" id="settings-modal" hidden>
+    <div class="settings-modal__content">
+      <div class="settings-modal__header">
+        <h2>⚙️ おこづかい帳のせってい</h2>
+        <button type="button" class="settings-modal__close" id="close-settings">❌ とじる</button>
+      </div>
+      
+      <div class="settings-modal__body">
+        <!-- 🎨 色の設定セクション -->
+        <section class="settings-section">
+          <h3>🎨 色を かえよう</h3>
+          <label class="settings-field">
+            <span>📱 全体の背景の色（はいけい）</span>
+            <input type="color" id="cfg-bg-color" value="#f0f7ff">
+          </label>
+          <label class="settings-field">
+            <span>✍️ 「おこづかい帳」の文字の色</span>
+            <input type="color" id="cfg-title-color" value="#000000">
+          </label>
+          <label class="settings-field">
+            <span>👛 いまの残高カードの背景の色</span>
+            <input type="color" id="cfg-balance-bg" value="#4f9cf9">
+          </label>
+          <label class="settings-field">
+            <span>✏️ 「きろくする」ボタンの背景の色</span>
+            <input type="color" id="cfg-btn-add-bg" value="#4f9cf9">
+          </label>
+          <label class="settings-field">
+            <span>📑 タブの中の白い背景の色</span>
+            <input type="color" id="cfg-tab-body-bg" value="#ffffff">
+          </label>
+        </section>
+
+        <!-- 🔢 クイック金額の設定セクション -->
+        <section class="settings-section">
+          <h3>🔢 よくつかう金額を かえよう（円）</h3>
+          <div class="settings-quick-grid">
+            <label>1つめ <input type="number" id="cfg-quick-0" min="1" max="99999"></label>
+            <label>2つめ <input type="number" id="cfg-quick-1" min="1" max="99999"></label>
+            <label>3つめ <input type="number" id="cfg-quick-2" min="1" max="99999"></label>
+            <label>4つめ <input type="number" id="cfg-quick-3" min="1" max="99999"></label>
+            <label>5つめ <input type="number" id="cfg-quick-4" min="1" max="99999"></label>
+          </div>
+        </section>
+
+        <!-- 🚨 データ全クリアセクション -->
+        <section class="settings-section settings-section--danger">
+          <h3>🚨 ぜんぶ消す（初期化）</h3>
+          <p>今までつけた記録がぜんぶ消えて、最初からになります。</p>
+          <button type="button" class="btn-danger" id="btn-reset-all">🔥 データをぜんぶ消す</button>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
